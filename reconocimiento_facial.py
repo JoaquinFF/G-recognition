@@ -2,8 +2,8 @@ import cv2
 import face_recognition as fr
 
 # Cargar imagenes
-foto_control = fr.load_image_file('FotoA.jpg')
-foto_prueba = fr.load_image_file('FotoB.jpg')
+foto_control = fr.load_image_file('GUEVARA_CARA.jpg')
+foto_prueba = fr.load_image_file('GUEVARA_JOVEN.jpg')
 
 # Pasar las imagenes a rgb
 foto_control = cv2.cvtColor(foto_control, cv2.COLOR_BGR2RGB)
