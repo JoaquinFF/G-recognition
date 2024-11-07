@@ -1,12 +1,15 @@
 import cv2
 import face_recognition as fr
 
-# Cargar imagen de control
-foto_control = fr.load_image_file('FLOWERS_CARA.jpg')
-foto_control = cv2.cvtColor(foto_control, cv2.COLOR_BGR2RGB)
+# Cargar imágenes de control y crear arrays de nombres y codificaciones
+nombres_conocidos = ['FLOWERS', 'GUEVARA']  # Añade los nombres que necesites
+caras_conocidas = []
 
-# Codificar cara de control
-cara_codificada_control = fr.face_encodings(foto_control)[0]
+for nombre in nombres_conocidos:
+    imagen = fr.load_image_file(f'{nombre}_CARA.jpg')
+    imagen_rgb = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
+    codificacion = fr.face_encodings(imagen_rgb)[0]
+    caras_conocidas.append(codificacion)
 
 # Iniciar captura de video
 captura = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -25,9 +28,16 @@ while True:
     caras_codificadas = fr.face_encodings(frame_pequeño, ubicaciones_cara)
     
     for (top, right, bottom, left), cara_codificada in zip(ubicaciones_cara, caras_codificadas):
-        # Comparar con la cara de control
-        coincidencias = fr.compare_faces([cara_codificada_control], cara_codificada)
-        distancia = fr.face_distance([cara_codificada_control], cara_codificada)
+        # Comparar con todas las caras conocidas
+        coincidencias = fr.compare_faces(caras_conocidas, cara_codificada)
+        distancias = fr.face_distance(caras_conocidas, cara_codificada)
+        
+        # Encontrar el mejor match
+        mejor_coincidencia = None
+        if True in coincidencias:
+            mejor_indice = distancias.argmin()
+            if coincidencias[mejor_indice]:
+                mejor_coincidencia = nombres_conocidos[mejor_indice]
         
         # Ajustar coordenadas al tamaño original
         top *= 4
@@ -35,12 +45,12 @@ while True:
         bottom *= 4
         left *= 4
         
-        if coincidencias[0]:
+        if mejor_coincidencia:
             color = (0, 255, 0)  # Verde para coincidencia
-            texto = f"Coincide ({distancia[0]:.2f})"
+            texto = f"{mejor_coincidencia} ({distancias[mejor_indice]:.2f})"
         else:
             color = (0, 0, 255)  # Rojo para no coincidencia
-            texto = f"No coincide ({distancia[0]:.2f})"
+            texto = "Desconocido"
             
         # Dibujar rectángulo y texto
         cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
