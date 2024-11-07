@@ -2,7 +2,7 @@ import cv2
 import face_recognition as fr
 
 # Cargar imagen de control
-foto_control = fr.load_image_file('GUEVARA_CARA.jpg')
+foto_control = fr.load_image_file('FLOWERS_CARA.jpg')
 foto_control = cv2.cvtColor(foto_control, cv2.COLOR_BGR2RGB)
 
 # Codificar cara de control
