@@ -5,7 +5,7 @@ import csv
 from datetime import timedelta
 
 # Cargar imágenes de control y crear arrays de nombres y codificaciones
-nombres_conocidos = ['FLOWERS', 'GUEVARA']  # Añade los nombres que necesites
+nombres_conocidos = ['JOAQUIN', 'FACUNDO']  # Añade los nombres que necesites
 caras_conocidas = []
 
 for nombre in nombres_conocidos:
